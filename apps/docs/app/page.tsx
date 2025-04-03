@@ -1,7 +1,10 @@
+"use client";
+
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
-
+import { useAuth } from "@clerk/nextjs";
+import { useEffect } from "react";
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
   srcDark: string;
@@ -18,7 +21,24 @@ const ThemeImage = (props: Props) => {
   );
 };
 
+
+
 export default function Home() {
+  const { getToken } = useAuth();
+  
+  const getAccessToken = async () => {
+    const token = await getToken({
+      template: "logpilot_jwt",
+    });
+    return token;
+  }
+
+  useEffect(() => {
+    getToken().then((token) => {
+      console.log(token);
+    });
+  }, []);
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
