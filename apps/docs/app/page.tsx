@@ -34,7 +34,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getToken().then((token) => {
+    getToken({
+      template: "logpilot_jwt",
+    }).then((token) => {
       console.log(token);
     });
   }, []);
