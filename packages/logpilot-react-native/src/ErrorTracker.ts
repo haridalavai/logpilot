@@ -1,4 +1,5 @@
 import { InjestPayload } from "@logpilot/common";
+import axios from 'axios';
 
 interface ErrorTrackerConfig {
   apiKey: string;
@@ -106,6 +107,16 @@ class ErrorTracker {
     console.log('Error report:', report);
     console.log('URL:', url);
     console.log('API Key:', apiKey);
+    try {
+      const response = await axios.post(url, report, {
+        headers: {
+          'x-api-key': apiKey,
+        },
+      });
+      console.log('Response:', response);
+    } catch (error) {
+      console.error('Error sending error report:', error);
+    }
   }
 
   private setupConsoleCapture(): void {

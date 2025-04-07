@@ -1,6 +1,6 @@
 {
     "name": "@logpilot/common",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Common library for LogPilot",
     "main": "./index.ts",
     "scripts": {
