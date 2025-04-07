@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -53,15 +54,9 @@ model Event {
   timestamp   DateTime
   message     String
   occurrences Int       @default(1)
-  type        EventType
-  userId      String?
-  metadata    Json?
+  type        Int
+  level       String
+  clickhouseEventId String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-}
-
-enum EventType {
-  ERROR
-  LOG
-  USER
 }

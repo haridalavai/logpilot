@@ -9,12 +9,16 @@ import {
 } from '@nestjs/common';
 import { IngestionService } from './ingestion.service';
 import { IngestEventDto } from './dto/injest.dto';
-
+import { ApiHeader } from '@nestjs/swagger';
 @Controller('ingest')
 export class IngestionController {
   constructor(private readonly ingestionService: IngestionService) {}
 
   @Post(':projectId')
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'The API key for the project',
+  })
   async ingest(
     @Request() request: Request,
     @Param('projectId') projectId: string,

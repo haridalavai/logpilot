@@ -3,7 +3,6 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { Event, EventType } from '@prisma/client';
 import { ClickhouseService } from 'src/database/clickhouse.service';
 import { PrismaService } from 'src/database/prisma.service';
 import { IngestEventDto } from './dto/injest.dto';
@@ -37,42 +36,24 @@ export class IngestionService {
 
   async ingest(body: IngestEventDto, projectId: string): Promise<void> {
     try {
-      const existingEventWithSameMessage = await this.prisma.event.findFirst({
-        where: {
-          projectId,
+      console.log('Ingesting event', body);
+      const client = this.clickhouseService.getClient();
+      const result = await client.insert({
+        table: 'events',
+        format: 'JSONEachRow',
+        values: [{ 
+          project_id: projectId,
+          timestamp: body.timestamp,
+          source: body.source,
+          type: body.type,
           message: body.message,
-        },
+          level: body.level,
+          environment: body.environment,
+          stacktrace: body.stacktrace,
+          tags: body.tags,
+        }],
       });
-
-      if (existingEventWithSameMessage) {
-        await this.prisma.event.update({
-          where: { id: existingEventWithSameMessage.id },
-          data: { occurrences: existingEventWithSameMessage.occurrences + 1 },
-        });
-      } else {
-        await this.prisma.event.create({
-          data: {
-            message: body.message,
-            type: body.type,
-            project: {
-              connect: {
-                id: projectId,
-              },
-            },
-            timestamp: new Date(body.timestamp),
-            occurrences: 1,
-          },
-        });
-
-        const client = this.clickhouseService.getClient();
-        const result = await client.insert({
-          table: 'events',
-          format: 'JSONEachRow',
-          values: [{ ...body, projectId }],
-        });
-
-        console.log(result);
-      }
+      console.log(result);
     } catch (error) {
       console.error(error);
       throw error;

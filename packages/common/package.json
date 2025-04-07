@@ -1,0 +1,28 @@
+{
+    "name": "@logpilot/common",
+    "version": "1.0.0",
+    "description": "Common library for LogPilot",
+    "main": "./index.ts",
+    "scripts": {
+      "test": "jest",
+      "build": "tsc"
+    },
+    "keywords": [
+      "react-native",
+      "expo",
+      "error-tracking",
+      "monitoring"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "peerDependencies": {
+      "expo": "*",
+      "react-native": "*"
+    },
+    "devDependencies": {
+      "@repo/typescript-config": "workspace:*",
+      "@types/react-native": "^0.72.0",
+      "jest": "^29.0.0",
+      "typescript": "^5.0.0"
+    }
+  }

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createProject(
     projectData: CreateProjectDto,
@@ -32,13 +32,21 @@ export class ProjectsService {
           name: projectData.name,
           slug: slug,
           userId: userId,
-          apiKey: {
-            create: {
-              key: apiKey,
+        },
+      });
+
+      await this.prisma.apiKey.create({
+        data: {
+          key: apiKey,
+          project: {
+            connect: {
+              id: project.id,
             },
           },
         },
       });
+
+
       return project;
     } catch (error) {
       console.log('Failed to create project', error);
@@ -117,9 +125,9 @@ export class ProjectsService {
       const apiKey = await this.prisma.apiKey.update({
         where: { projectId: projectId },
         data: {
-        key: key,
-      },
-    });
+          key: key,
+        },
+      });
       return apiKey;
     } catch (error) {
       console.log('Failed to rotate api key', error);

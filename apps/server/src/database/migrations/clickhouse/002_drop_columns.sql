@@ -1,0 +1,3 @@
+ALTER TABLE events
+    DROP COLUMN IF EXISTS context,
+    DROP COLUMN IF EXISTS payload 
